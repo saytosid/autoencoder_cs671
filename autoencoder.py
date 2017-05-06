@@ -29,10 +29,10 @@ def load_imgs_from_folder(folder_path):
     return return_list
 
 def load_my_data():
-    class0_folder = "data/Ear/"
-    class1_folder = "data/Iris/"
-    class2_folder = "data/Knuckle/"
-    class3_folder = "data/Palm/"
+    class0_folder = "data_orig/Ear/"
+    class1_folder = "data_orig/Iris/"
+    class2_folder = "data_orig/Knuckle/"
+    class3_folder = "data_orig/Palm/"
     data = []
     data_test = []
     l1 = load_imgs_from_folder(class0_folder)
@@ -67,14 +67,22 @@ def load_my_data():
 if __name__=="__main__":
     # get_img("data/Ear/ear_roi1.JPEG")
     # this is the size of our encoded representations
-    encoding_dim = 64  # 32 floats -> compression of factor 24.5, assuming the input is 16384 floats
+    encoding_dim = 512  # 32 floats -> compression of factor 24.5, assuming the input is 16384 floats
 
     # this is our input placeholder
     input_img = Input(shape=(16384,))
     # "encoded" is the encoded representation of the input
-    encoded = Dense(encoding_dim, activation='relu')(input_img)
+    l1 = Dense(8192, activation='relu')(input_img)
+    l2 = Dense(4096, activation='relu')(l1)
+    l3 = Dense(2048, activation='relu')(l2)
+    encoded = Dense(encoding_dim, activation='relu')(l3)
+	# encoder done
     # "decoded" is the lossy reconstruction of the input
-    decoded = Dense(16384, activation='sigmoid')(encoded)
+    l1_d = Dense(512, activation='relu')(encoded)
+    l2_d = Dense(2028, activation='relu')(l1_d)
+    l3_d = Dense(4096, activation='relu')(l2_d)
+    l4_d = Dense(8192, activation='relu')(l3_d)
+    decoded = Dense(16384, activation='sigmoid')(l4_d)
 
     # this model maps an input to its reconstruction
     autoencoder = Model(input_img, decoded)
