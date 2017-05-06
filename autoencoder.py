@@ -72,10 +72,11 @@ if __name__=="__main__":
     # this is our input placeholder
     input_img = Input(shape=(16384,))
     # "encoded" is the encoded representation of the input
-    l1 = Dense(8192, activation='relu')(input_img)
-    l2 = Dense(4096, activation='relu')(l1)
-    l3 = Dense(2048, activation='relu')(l2)
-    encoded = Dense(encoding_dim, activation='relu')(l3)
+    l1 = Dense(16384, activation='relu')(input_img)
+    l2 = Dense(8192, activation='relu')(l1)
+    l3 = Dense(4096, activation='relu')(l2)
+    l4 = Dense(2048, activation='relu')(l3)
+    encoded = Dense(encoding_dim, activation='relu')(l4)
 	# encoder done
     # "decoded" is the lossy reconstruction of the input
     l1_d = Dense(512, activation='relu')(encoded)
@@ -93,7 +94,7 @@ if __name__=="__main__":
     # create a placeholder for an encoded (32-dimensional) input
     encoded_input = Input(shape=(encoding_dim,))
     # retrieve the last layer of the autoencoder model
-    decoder_layer = autoencoder.layers[-1]
+    decoder_layer = autoencoder.layers[-4]
     # create the decoder model
     decoder = Model(encoded_input, decoder_layer(encoded_input))
 
